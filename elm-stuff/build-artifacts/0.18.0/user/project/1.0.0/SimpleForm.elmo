@@ -1,0 +1,66 @@
+var _user$project$SimpleForm$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{ctor: '[]'});
+};
+var _user$project$SimpleForm$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		return A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			'submited',
+			{ctor: '[]'});
+	});
+var _user$project$SimpleForm$init = A2(
+	_elm_lang$core$Platform_Cmd_ops['!'],
+	'',
+	{ctor: '[]'});
+var _user$project$SimpleForm$FormSubmited = {ctor: 'FormSubmited'};
+var _user$project$SimpleForm$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$form,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onSubmit(_user$project$SimpleForm$FormSubmited),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$input,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('file'),
+							_1: {ctor: '[]'}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$type_('submit'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('submit'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(model),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$SimpleForm$main = _elm_lang$html$Html$program(
+	{init: _user$project$SimpleForm$init, update: _user$project$SimpleForm$update, view: _user$project$SimpleForm$view, subscriptions: _user$project$SimpleForm$subscriptions})();

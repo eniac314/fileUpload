@@ -1,0 +1,196 @@
+var _user$project$UploadViaPorts$fileUploadRequest = function (_p0) {
+	var _p1 = _p0;
+	var body = _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'contents',
+				_1: _elm_lang$core$Json_Encode$string(_p1.contents)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'filename',
+					_1: _elm_lang$core$Json_Encode$string(_p1.filename)
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+	return A3(
+		_elm_lang$http$Http$post,
+		'fileUpload.php',
+		_elm_lang$http$Http$jsonBody(body),
+		_elm_lang$core$Json_Decode$succeed(
+			{ctor: '_Tuple0'}));
+};
+var _user$project$UploadViaPorts$init = {
+	ctor: '_Tuple2',
+	_0: {id: 'InputId', mFile: _elm_lang$core$Maybe$Nothing},
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _user$project$UploadViaPorts$fileSelected = _elm_lang$core$Native_Platform.outgoingPort(
+	'fileSelected',
+	function (v) {
+		return v;
+	});
+var _user$project$UploadViaPorts$fileContentRead = _elm_lang$core$Native_Platform.incomingPort(
+	'fileContentRead',
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (contents) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (filename) {
+					return _elm_lang$core$Json_Decode$succeed(
+						{contents: contents, filename: filename});
+				},
+				A2(_elm_lang$core$Json_Decode$field, 'filename', _elm_lang$core$Json_Decode$string));
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'contents', _elm_lang$core$Json_Decode$string)));
+var _user$project$UploadViaPorts$Model = F2(
+	function (a, b) {
+		return {id: a, mFile: b};
+	});
+var _user$project$UploadViaPorts$File = F2(
+	function (a, b) {
+		return {contents: a, filename: b};
+	});
+var _user$project$UploadViaPorts$FilePortData = F2(
+	function (a, b) {
+		return {contents: a, filename: b};
+	});
+var _user$project$UploadViaPorts$UploadResult = function (a) {
+	return {ctor: 'UploadResult', _0: a};
+};
+var _user$project$UploadViaPorts$uploadFile = function (file) {
+	return A2(
+		_elm_lang$http$Http$send,
+		_user$project$UploadViaPorts$UploadResult,
+		_user$project$UploadViaPorts$fileUploadRequest(file));
+};
+var _user$project$UploadViaPorts$update = F2(
+	function (msg, model) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
+			case 'FormSubmited':
+				var _p3 = model.mFile;
+				if (_p3.ctor === 'Nothing') {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				} else {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{
+							ctor: '::',
+							_0: _user$project$UploadViaPorts$uploadFile(_p3._0),
+							_1: {ctor: '[]'}
+						});
+				}
+			case 'FileSelected':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{
+						ctor: '::',
+						_0: _user$project$UploadViaPorts$fileSelected(model.id),
+						_1: {ctor: '[]'}
+					});
+			case 'FileRead':
+				var _p4 = _p2._0;
+				var newFile = {contents: _p4.contents, filename: _p4.filename};
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							mFile: _elm_lang$core$Maybe$Just(newFile)
+						}),
+					{ctor: '[]'});
+			default:
+				if (_p2._0.ctor === 'Ok') {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				} else {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				}
+		}
+	});
+var _user$project$UploadViaPorts$FileRead = function (a) {
+	return {ctor: 'FileRead', _0: a};
+};
+var _user$project$UploadViaPorts$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: _user$project$UploadViaPorts$fileContentRead(_user$project$UploadViaPorts$FileRead),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$UploadViaPorts$FileSelected = {ctor: 'FileSelected'};
+var _user$project$UploadViaPorts$FormSubmited = {ctor: 'FormSubmited'};
+var _user$project$UploadViaPorts$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$form,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onSubmit(_user$project$UploadViaPorts$FormSubmited),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$input,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('file'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$id(model.id),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html_Events$on,
+										'change',
+										_elm_lang$core$Json_Decode$succeed(_user$project$UploadViaPorts$FileSelected)),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$type_('submit'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('submit'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$UploadViaPorts$main = _elm_lang$html$Html$program(
+	{init: _user$project$UploadViaPorts$init, update: _user$project$UploadViaPorts$update, view: _user$project$UploadViaPorts$view, subscriptions: _user$project$UploadViaPorts$subscriptions})();

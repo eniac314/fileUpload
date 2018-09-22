@@ -1,0 +1,192 @@
+var _user$project$CustomElementUpload$fileUploadRequest = function (_p0) {
+	var _p1 = _p0;
+	var body = _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'contents',
+				_1: _elm_lang$core$Json_Encode$string(_p1.contents)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'filename',
+					_1: _elm_lang$core$Json_Encode$string(_p1.filename)
+				},
+				_1: {ctor: '[]'}
+			}
+		});
+	return A3(
+		_elm_lang$http$Http$post,
+		'fileUpload.php',
+		_elm_lang$http$Http$jsonBody(body),
+		_elm_lang$core$Json_Decode$succeed(
+			{ctor: '_Tuple0'}));
+};
+var _user$project$CustomElementUpload$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{ctor: '[]'});
+};
+var _user$project$CustomElementUpload$fileReader = function (attributes) {
+	return A3(
+		_elm_lang$html$Html$node,
+		'file-reader',
+		attributes,
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$type_('file'),
+					_1: {ctor: '[]'}
+				},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$CustomElementUpload$init = {
+	ctor: '_Tuple2',
+	_0: {id: 'InputId', mFile: _elm_lang$core$Maybe$Nothing, debug: _elm_lang$core$Maybe$Nothing},
+	_1: _elm_lang$core$Platform_Cmd$none
+};
+var _user$project$CustomElementUpload$Model = F3(
+	function (a, b, c) {
+		return {id: a, mFile: b, debug: c};
+	});
+var _user$project$CustomElementUpload$File = F2(
+	function (a, b) {
+		return {contents: a, filename: b};
+	});
+var _user$project$CustomElementUpload$FileData = F2(
+	function (a, b) {
+		return {contents: a, filename: b};
+	});
+var _user$project$CustomElementUpload$UploadResult = function (a) {
+	return {ctor: 'UploadResult', _0: a};
+};
+var _user$project$CustomElementUpload$uploadFile = function (file) {
+	return A2(
+		_elm_lang$http$Http$send,
+		_user$project$CustomElementUpload$UploadResult,
+		_user$project$CustomElementUpload$fileUploadRequest(file));
+};
+var _user$project$CustomElementUpload$update = F2(
+	function (msg, model) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
+			case 'UploadFile':
+				var _p3 = model.mFile;
+				if (_p3.ctor === 'Nothing') {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				} else {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{
+							ctor: '::',
+							_0: _user$project$CustomElementUpload$uploadFile(_p3._0),
+							_1: {ctor: '[]'}
+						});
+				}
+			case 'FileRead':
+				var _p4 = _p2._0;
+				var newFile = {contents: _p4.contents, filename: _p4.filename};
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						model,
+						{
+							mFile: _elm_lang$core$Maybe$Just(newFile)
+						}),
+					{ctor: '[]'});
+			default:
+				if (_p2._0.ctor === 'Ok') {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				} else {
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{ctor: '[]'});
+				}
+		}
+	});
+var _user$project$CustomElementUpload$FileRead = function (a) {
+	return {ctor: 'FileRead', _0: a};
+};
+var _user$project$CustomElementUpload$decodeFileData = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'fileData',
+			_1: {ctor: '[]'}
+		}
+	},
+	A2(
+		_elm_lang$core$Json_Decode$map,
+		_user$project$CustomElementUpload$FileRead,
+		A3(
+			_elm_lang$core$Json_Decode$map2,
+			_user$project$CustomElementUpload$FileData,
+			A2(_elm_lang$core$Json_Decode$field, 'contents', _elm_lang$core$Json_Decode$string),
+			A2(_elm_lang$core$Json_Decode$field, 'filename', _elm_lang$core$Json_Decode$string))));
+var _user$project$CustomElementUpload$UploadFile = {ctor: 'UploadFile'};
+var _user$project$CustomElementUpload$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _user$project$CustomElementUpload$fileReader(
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$id(model.id),
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_lang$html$Html_Events$on, 'fileRead', _user$project$CustomElementUpload$decodeFileData),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$CustomElementUpload$UploadFile),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('submit'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(model)),
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$CustomElementUpload$main = _elm_lang$html$Html$program(
+	{init: _user$project$CustomElementUpload$init, update: _user$project$CustomElementUpload$update, view: _user$project$CustomElementUpload$view, subscriptions: _user$project$CustomElementUpload$subscriptions})();

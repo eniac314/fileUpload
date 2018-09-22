@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" href="styles/highlight/styles/atom-one-dark.css">
+    <link rel="stylesheet" href="styles/dropzone/dropzone.css">
+    <link rel="stylesheet" href="styles/dropzone/basic.css">
+    <script src="js/highlight/highlight.pack.js"></script>
+    <script src="js/dropzone/dropzone.js"></script>
+    <!-- <script>setTimeout(function() {hljs.initHighlighting();}, 1000);</script> -->
+    <!-- <script>hljs.initHighlightingOnLoad();</script> -->
+<!--     <link rel="stylesheet" href="fonts/oceania.otf">
+ -->    <meta charset="UTF-8">
+
+    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
+
+  
+    <title>Mocalis - Home</title>
+    <style>
+      html,head,body { padding:0; margin:0; }
+      body { font-family: calibri, helvetica, arial, sans-serif; }
+    </style>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  </head>
+
+  <body>
+
+  <div id="main"></div>
+   <script src="js/main.js"></script>
+   <script>
+    var node = document.getElementById('main');
+    var app = Elm.Main.embed(node);
+    
+    var highlightFun = function() {
+      var monospace = document.getElementsByClassName("codeBlock");
+      var l = monospace.length;
+
+      for (var i = 0; i < l; i++){
+        hljs.highlightBlock(monospace[i]);
+      }
+
+    };
+    
+    Dropzone.autoDiscover = false;
+    Dropzone.options.myDropzone = false; 
+
+    var dropFunc = function(extraParams){
+      var dzInputs = document.getElementsByClassName('dz-hidden-input');
+      
+      l = dzInputs.length;
+
+      for (var i = 0; i < l; i++){
+        dzInputs[0].parentNode.removeChild(dzInputs[0]);
+      }
+      
+      
+
+      var credentials = extraParams.credentials;
+
+      var options1 = 
+        { url: "/picsUpload.php"
+        , maxFilesize: 10
+        , paramName : "image"
+        , acceptedFiles : "image/*"
+        
+        , params: credentials
+        , timeout: 300000
+        }; 
+
+        var options2 = 
+        { url: "/filesUpload.php"
+        , maxFilesize: 10
+        , paramName : "file"
+        , params: credentials
+        , timeout: 300000
+        }; 
+      
+      var options = (extraParams.position == "files")? options2:options1;
+      var divId = (extraParams.position == "files")? "div#filesDropzone":"div#picsDropzone";
+
+      console.log(credentials);
+      console.log(extraParams.position);
+
+      
+
+      var myDropzone = new Dropzone(divId, options);
+      
+      myDropzone.on("success", function(response) {
+        var result = 
+          { "pos" : extraParams.position
+          , "status" : response.status
+          };
+
+        app.ports.dropZoneComPort.send(result);
+      });
+      
+      
+    };
+
+    
+
+    app.ports.highlight.subscribe(function() {setTimeout(highlightFun, 50);});
+
+    app.ports.loadDropzone.subscribe(function(extraParams) {setTimeout(function(){dropFunc(extraParams)}, 50);});
+    
+
+    app.ports.changeTitle.subscribe(function(title){document.title = title;});
+    
+
+  </script>
+
+  </body>
+
+</html>

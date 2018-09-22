@@ -1,0 +1,25 @@
+- using port to deal with files in Elm 0.18:
+https://www.paramander.com/blog/using-ports-to-deal-with-files-in-elm-0-17
+
+
+- catch submit event:
+form
+ [ onSubmit FormSubmitted ]
+ [ input [ type "file" ] []
+ ]
+
+ http://package.elm-lang.org/packages/elm-lang/html/2.0.0/Html-Events#onSubmit
+
+
+- iFrame upload
+
+- custom elements:
+https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements
+https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events
+https://www.youtube.com/watch?v=tyFe9Pw6TVE&feature=youtu.be
+https://www.youtube.com/watch?v=ar3TakwE8o0
+https://paper.dropbox.com/doc/Custom-Elements-in-Elm-1Dd7LMDwgJLNGHazDImSm
+https://ellie-app.com/VqgffPLrBVa1
+
+- use ports to make Js do the upload 
+

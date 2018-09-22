@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Main</title>
+  <script type="text/javascript" src="js/UploadViaPorts.js"></script>
+</head>
+
+<body>
+  <div id="elm"></div>
+  
+  <script type="text/javascript">
+    var app = Elm.UploadViaPorts.init({
+    node: document.getElementById('elm'),
+    });
+
+    app.ports.fileSelected.subscribe(function (id){
+      
+      var node = document.getElementById(id)
+      if (node === null){
+        return;
+      }
+
+      var file = node.files[0];
+      var reader = new FileReader();
+
+      reader.onload = (function(event){
+        var base64encoded = event.target.result;
+
+        var portData = {
+          contents: base64encoded,
+          filename: file.name
+        };
+
+        app.ports.fileContentRead.send(portData);
+      });
+
+      reader.readAsDataURL(file);
+    
+    });
+
+    
+  </script>
+</body>
+</html>
